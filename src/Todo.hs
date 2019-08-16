@@ -1,5 +1,7 @@
 module Todo where
 
+import Control.Error.Safe (justErr)
+import Data.Functor ((<&>))
 import Polysemy
 import Polysemy.Error
 import KVS
@@ -33,3 +35,13 @@ fetch :: ( Member (KVS Key Todo) r
 fetch id = getKvs id >>= \case
           Just todo -> pure todo
           Nothing -> throw $ TodoNotAvailable id
+
+toggle :: (Member (KVS Key Todo) r
+          ,Member (Error TodoError) r) => Key -> Sem r Todo
+toggle key = do
+  todoErr <- getKvs key <&> justErr (TodoNotAvailable key)
+  todo <- either throw return todoErr
+  let completed = _completed todo
+  let modifiedTodo = todo { _completed = not completed }
+  insertKvs key modifiedTodo
+  return modifiedTodo

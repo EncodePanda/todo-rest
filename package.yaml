@@ -32,6 +32,7 @@ dependencies:
 - containers
 - polysemy
 - polysemy-plugin
+- errors
 
 library:
   source-dirs: src
