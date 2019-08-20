@@ -33,6 +33,8 @@ dependencies:
 - polysemy
 - polysemy-plugin
 - errors
+- servant
+- servant-server
 - aeson
 
 library:
