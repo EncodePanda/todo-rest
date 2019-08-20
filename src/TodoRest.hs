@@ -1,5 +1,9 @@
 module TodoRest where
 
+import Polysemy
+import Polysemy.Error
+import KVS
+import MonotonicSequence
 import Todo
 import Servant
 import Data.Proxy
@@ -13,3 +17,17 @@ type TodoAPI
 
 api :: Proxy TodoAPI
 api = Proxy
+
+server :: ( Member (KVS Key Todo) r
+          , Member (Error TodoError) r
+          , Member (MonotonicSequence Key) r
+          ) => ServerT TodoAPI (Sem r)
+server
+  =    list
+  :<|> fetch
+  :<|> toggle
+  :<|> addAndFetch
+
+  where
+    addAndFetch todo = (add todo) >>= fetch
+
