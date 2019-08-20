@@ -33,6 +33,7 @@ dependencies:
 - polysemy
 - polysemy-plugin
 - errors
+- aeson
 
 library:
   source-dirs: src
