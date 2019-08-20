@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric     #-}
 module Main where
 
 import Data.IORef
@@ -14,6 +15,7 @@ import           Todo
 import           TodoRest
 import qualified Data.Map.Strict as M
 import Control.Monad.Except
+import Options.Generic
 
 initTodos :: M.Map Key Todo
 initTodos = (M.singleton 1 (newTodo "push to repo"))
@@ -36,7 +38,11 @@ createApp = do
     handleErrors (Left (TodoNotAvailable id)) = Left err404 { errBody = "Todo does not exist" }
     handleErrors (Right value) = Right value
 
+data Args = Args { port :: Int } deriving (Generic, Show)
+instance ParseRecord Args
+
 main :: IO ()
 main = do
+  Args(port) <- getRecord "TODO Server"
   app <- createApp
-  W.run 9090 app
+  W.run port app

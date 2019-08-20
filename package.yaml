@@ -39,6 +39,7 @@ dependencies:
 - wai
 - warp
 - mtl
+- optparse-generic
 
 library:
   source-dirs: src
