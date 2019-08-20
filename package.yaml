@@ -36,12 +36,15 @@ dependencies:
 - servant
 - servant-server
 - aeson
+- wai
+- warp
+- mtl
 
 library:
   source-dirs: src
 
 executables:
-  todo-rest-exe:
+  server:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
